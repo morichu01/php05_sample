@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ajax</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <style>
+        div {
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">ajax</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a id="ajax_get" class="nav-link" href="#">一覧表示</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <form>
+        <div class="form-group">
+            <label for="task">Task</label>
+            <input type="text" class="form-control" id="task" name="task" placeholder="Enter task">
+        </div>
+        <div class="form-group">
+            <label for="deadline">Deadline</label>
+            <input type="date" class="form-control" id="deadline" name="deadline">
+        </div>
+        <div class="form-group">
+            <label for="comment">Comment</label>
+            <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <button type="button" id="send" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+
+    <ul id="echo" class="list-group">
+        <!-- データ表示部分 -->
+    </ul>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        // DBから取得したデータを表示する関数
+        function listData(data) {
+            // 書ける人は書いてみよう
+        }
+
+        // DBからデータを取得する関数
+        function selectData() {
+            const url = 'ajax_get.php';
+            $.getJSON(url)
+                .done(function (data, textStatus, jqXHR) {
+                    console.log(data);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    console.log('error');
+                })
+                .always(function () {
+                });
+        }
+
+
+        // DBへデータを登録する関数
+        function insertData() {
+            const url = 'ajax_post.php';
+            const value = {
+                task: $('#task').val(), //キーと値の指定
+                deadline: $('#deadline').val(), //PHPでは$_POST['キー名']で受取
+                comment: $('#comment').val(),
+            };
+            // データ送信
+            $.ajax({
+                dataType: 'json',
+                url: url,
+                type: 'POST',
+                data: value,
+            })
+                .done(function (data) {
+                    console.log(data);
+                })
+                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log('error');
+                })
+                .always(function () {
+                });
+        }
+
+        // 読み込み時にDBからデータ取得
+        selectData();
+
+        // 送信でDBにデータ送信
+        $('#send').on('click', function () { // 送信ボタンクリック時に
+            insertData(); // 送信関数を実行
+            $('#task').val(''); // 入力部分を空にする
+            $('#deadline').val('');
+            $('#comment').val('');
+        });
+
+    </script>
+
+</body>
+
+</html>
